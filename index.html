@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danarte Service and Source Pvt Ltd - Employee Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Navbar -->
+        <nav class="bg-blue-800 text-white shadow-lg">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M12 2L1 21h22L12 2zm0 3.5L19.5 19h-15L12 5.5z'/%3E%3C/svg%3E" alt="Logo" class="h-8 w-8 mr-2">
+                    <h1 class="text-xl font-bold">Danarte Service and Source Pvt Ltd</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="clockInBtn" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">
+                        Clock In
+                    </button>
+                    <button class="hover:bg-blue-700 px-3 py-2 rounded">
+                        <i class="bi bi-bell"></i>
+                    </button>
+                    <button id="profileBtn" class="hover:bg-blue-700 px-3 py-2 rounded flex items-center">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="ml-2">John Doe</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Employee Details Card -->
+                <div class="bg-white rounded-lg p-6 custom-shadow hover:shadow-xl transition-shadow cursor-pointer">
+                    <div class="flex items-center mb-4">
+                        <i class="bi bi-person-vcard text-2xl text-blue-800"></i>
+                        <h2 class="text-lg font-semibold ml-2">Employee Details</h2>
+                    </div>
+                    <p class="text-gray-600 mb-4">Update your personal information and employment details</p>
+                    <button onclick="showEmployeeForm()" class="text-blue-800 hover:text-blue-900">View/Update Details →</button>
+                </div>
+
+                <!-- KYC Documents Card -->
+                <div class="bg-white rounded-lg p-6 custom-shadow hover:shadow-xl transition-shadow cursor-pointer">
+                    <div class="flex items-center mb-4">
+                        <i class="bi bi-file-earmark-text text-2xl text-blue-800"></i>
+                        <h2 class="text-lg font-semibold ml-2">KYC Documents</h2>
+                    </div>
+                    <p class="text-gray-600 mb-4">Upload and manage your KYC documents</p>
+                    <button onclick="showKYCForm()" class="text-blue-800 hover:text-blue-900">Upload Documents →</button>
+                </div>
+
+                <!-- Salary Information Card -->
+                <div class="bg-white rounded-lg p-6 custom-shadow hover:shadow-xl transition-shadow cursor-pointer">
+                    <div class="flex items-center mb-4">
+                        <i class="bi bi-cash-stack text-2xl text-blue-800"></i>
+                        <h2 class="text-lg font-semibold ml-2">Salary Information</h2>
+                    </div>
+                    <p class="text-gray-600 mb-4">View your salary structure and payment history</p>
+                    <button onclick="viewSalaryInfo()" class="text-blue-800 hover:text-blue-900">View Details →</button>
+                </div>
+
+                <!-- Attendance Card -->
+                <div class="bg-white rounded-lg p-6 custom-shadow hover:shadow-xl transition-shadow cursor-pointer">
+                    <div class="flex items-center mb-4">
+                        <i class="bi bi-calendar-check text-2xl text-blue-800"></i>
+                        <h2 class="text-lg font-semibold ml-2">Attendance</h2>
+                    </div>
+                    <div id="attendanceStatus" class="mb-4">
+                        <p class="text-gray-600">Today's Status: <span class="text-red-500">Not Checked In</span></p>
+                        <p class="text-gray-600">Last Check-in: Never</p>
+                    </div>
+                    <button onclick="viewAttendance()" class="text-blue-800 hover:text-blue-900">View History →</button>
+                </div>
+
+                <!-- Generate Documents Card -->
+                <div class="bg-white rounded-lg p-6 custom-shadow hover:shadow-xl transition-shadow cursor-pointer">
+                    <div class="flex items-center mb-4">
+                        <i class="bi bi-file-earmark-pdf text-2xl text-blue-800"></i>
+                        <h2 class="text-lg font-semibold ml-2">Generate Documents</h2>
+                    </div>
+                    <div class="space-y-2">
+                        <button onclick="generateDocument('salary-slip')" class="block w-full text-left text-blue-800 hover:text-blue-900">Generate Salary Slip →</button>
+                        <button onclick="generateDocument('offer-letter')" class="block w-full text-left text-blue-800 hover:text-blue-900">Generate Offer Letter →</button>
+                    </div>
+                </div>
+
+                <!-- Onboarding Status Card -->
+                <div class="bg-white rounded-lg p-6 custom-shadow hover:shadow-xl transition-shadow">
+                    <div class="flex items-center mb-4">
+                        <i class="bi bi-check2-circle text-2xl text-blue-800"></i>
+                        <h2 class="text-lg font-semibold ml-2">Onboarding Status</h2>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <div class="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
+                            <span class="text-gray-600">Personal Details Submitted</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-2 h-2 rounded-full bg-yellow-500 mr-2"></div>
+                            <span class="text-gray-600">KYC Verification In Progress</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-2 h-2 rounded-full bg-gray-300 mr-2"></div>
+                            <span class="text-gray-600">Offer Letter Generation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Template -->
+    <div id="modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Clock In/Out Functionality
+        let isClockIn = false;
+        const clockInBtn = document.getElementById('clockInBtn');
+        const attendanceStatus = document.getElementById('attendanceStatus');
+
+        clockInBtn.addEventListener('click', () => {
+            isClockIn = !isClockIn;
+            clockInBtn.textContent = isClockIn ? 'Clock Out' : 'Clock In';
+            clockInBtn.className = isClockIn ? 
+                'bg-red-600 hover:bg-red-700 px-4 py-2 rounded' : 
+                'bg-green-600 hover:bg-green-700 px-4 py-2 rounded';
+            
+            const now = new Date().toLocaleTimeString();
+            attendanceStatus.innerHTML = `
+                <p class="text-gray-600">Today's Status: <span class="${isClockIn ? 'text-green-500' : 'text-red-500'}">${isClockIn ? 'Checked In' : 'Not Checked In'}</span></p>
+                <p class="text-gray-600">Last Check-in: ${isClockIn ? now : 'Never'}</p>
+            `;
+        });
+
+        // Modal Functions
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modalContent');
+
+        function showModal(content) {
+            modalContent.innerHTML = content;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Employee Form
+        function showEmployeeForm() {
+            const formContent = `
+                <h2 class="text-xl font-bold mb-4">Employee Details</h2>
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" class="mt-1 block w-full rounded border-gray-300 shadow-sm" value="John Doe">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Employee ID</label>
+                        <input type="text" class="mt-1 block w-full rounded border-gray-300 shadow-sm" value="EMP001">
+                    </div>
+                    <div>
+                        <button type="button" onclick="closeModal()" class="w-full bg-blue-800 text-white rounded py-2">Save Changes</button>
+                    </div>
+                </form>
+            `;
+            showModal(formContent);
+        }
+
+        // KYC Form
+        function showKYCForm() {
+            const kycContent = `
+                <h2 class="text-xl font-bold mb-4">KYC Documents</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Aadhar Card</label>
+                        <input type="file" class="mt-1 block w-full">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">PAN Card</label>
+                        <input type="file" class="mt-1 block w-full">
+                    </div>
+                    <button onclick="closeModal()" class="w-full bg-blue-800 text-white rounded py-2">Upload Documents</button>
+                </div>
+            `;
+            showModal(kycContent);
+        }
+
+        // Generate Documents
+        function generateDocument(type) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            if (type === 'salary-slip') {
+                doc.text('Danarte Service and Source Pvt Ltd', 20, 20);
+                doc.text('Salary Slip - January 2024', 20, 30);
+                doc.text('Employee: John Doe', 20, 40);
+                doc.text('Basic Salary: ₹50,000', 20, 50);
+                doc.save('salary-slip.pdf');
+            } else if (type === 'offer-letter') {
+                doc.text('Danarte Service and Source Pvt Ltd', 20, 20);
+                doc.text('Offer Letter', 20, 30);
+                doc.text('Dear John Doe,', 20, 40);
+                doc.text('We are pleased to offer you employment...', 20, 50);
+                doc.save('offer-letter.pdf');
+            }
+        }
+
+        // View Salary Info
+        function viewSalaryInfo() {
+            const salaryContent = `
+                <h2 class="text-xl font-bold mb-4">Salary Information</h2>
+                <div class="space-y-2">
+                    <p class="text-gray-600">Basic Salary: ₹50,000</p>
+                    <p class="text-gray-600">HRA: ₹20,000</p>
+                    <p class="text-gray-600">Special Allowance: ₹10,000</p>
+                    <p class="font-bold mt-4">Total: ₹80,000</p>
+                </div>
+                <button onclick="closeModal()" class="w-full bg-blue-800 text-white rounded py-2 mt-4">Close</button>
+            `;
+            showModal(salaryContent);
+        }
+
+        // View Attendance
+        function viewAttendance() {
+            const attendanceContent = `
+                <h2 class="text-xl font-bold mb-4">Attendance History</h2>
+                <div class="space-y-2">
+                    <p class="text-gray-600">Today: Present</p>
+                    <p class="text-gray-600">Yesterday: Present</p>
+                    <p class="text-gray-600">2024-01-10: Absent</p>
+                </div>
+                <button onclick="closeModal()" class="w-full bg-blue-800 text-white rounded py-2 mt-4">Close</button>
+            `;
+            showModal(attendanceContent);
+        }
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
